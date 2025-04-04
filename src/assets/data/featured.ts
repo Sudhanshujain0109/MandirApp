@@ -1,0 +1,26 @@
+export const FEATURED=[
+    {
+        id:1,
+        image:require('../Images/pnachang.png'),
+        title:"Panchang",
+        bgcolor:"#FFFFA4",
+    },
+    {
+        id:2,
+        image:require('../Images/calender.png'),
+        title:"Booking",
+        bgcolor:"#E7E7E7"
+    },
+    {
+        id:3,
+        image:require('../Images/temple.png'),
+        title:"Festival",
+        bgcolor:"#FFFFA4"
+    },
+    {
+        id:4,
+        image:require('../Images/youtube.png'),
+        title:"e-Darshan",
+        bgcolor:"#E7E7E7"
+    },
+]
