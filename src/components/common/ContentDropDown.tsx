@@ -20,22 +20,32 @@ const ContentDropDown = ({getGender,defalutValue}:dropdownprops) => {
     },[])
 
     return (
-        <CustomDropDown open={open} childrenStle={{borderRadius:6 ,}} title={value} style={{width:width-40,borderWidth:1,borderColor:'grey'}} >
-            {
-                items.map((item,index)=>(
-                    <TouchableOpacity onPress={()=>{
-                        setOpen(!open)
-                        setValue(item.label)
-                        getGender(item.value)
-                    }}>
-                        <Text style={{ fontSize: 14, color: 'black',paddingVertical:8,paddingHorizontal:0 }}>
-                            {item.label}
-                        </Text>
-                    </TouchableOpacity>
-                ))
-            }
-        </CustomDropDown>
-    )
+      <CustomDropDown
+        open={open}
+        childrenStle={{borderRadius: 6}}
+        title={value}
+        style={{width: width - 40, borderWidth: 1, borderColor: 'grey'}}
+        onpress={() => setOpen(prev => !prev)}>
+        {items.map((item, index) => (
+          <TouchableOpacity
+            onPress={() => {
+              setOpen(!open);
+              setValue(item.label);
+              getGender(item.value);
+            }}>
+            <Text
+              style={{
+                fontSize: 14,
+                color: 'black',
+                paddingVertical: 8,
+                paddingHorizontal: 0,
+              }}>
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </CustomDropDown>
+    );
 }
 
 export default ContentDropDown

@@ -14,37 +14,31 @@ type DropDownProps={
 }
 
 const CustomDropDown = ({ children,onpress,title,style,childrenStle,open=false}:DropDownProps) => {
-    const [showDetail, setShowDetail] = useState(open)
-    useEffect(()=>{
-        setShowDetail(!showDetail)
-    },[title,open])
+  
     return (
-        <View style={[styles.expandableView,style]}>
-            <TouchableOpacity onPress={() => {
-                setShowDetail(!showDetail)
-            }} style={styles.container}>
-                <Text style={styles.loongtextStyle}>{title}</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            setShowDetail(!showDetail)
-                        }}
-                        style={{transform:[{rotateZ:showDetail?'90deg':'270deg'}]}}
-                    >
-                        <SvgIcon color='red'  svgXmlData={SVG_XML.BACK_BUTTON} size={20}/>
-                    </TouchableOpacity>
-                </View>
+      <View style={[styles.expandableView, style]}>
+        <TouchableOpacity onPress={onpress} style={styles.container}>
+          <Text style={styles.loongtextStyle}>{title}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={onpress}
+              style={{transform: [{rotateZ: open ? '90deg' : '270deg'}]}}>
+              <SvgIcon color="red" svgXmlData={SVG_XML.BACK_BUTTON} size={20} />
             </TouchableOpacity>
-            {
-                showDetail ?
-                <View style={[{ width: children ? width - 80 : 0, borderRadius:10}]}>
-                    {
-                        children
-                    }
-                </View> : null
-            }
-        </View>
-    )
+          </View>
+        </TouchableOpacity>
+        {open ? (
+          <View style={[{width: children ? width - 80 : 0, borderRadius: 10}]}>
+            {children}
+          </View>
+        ) : null}
+      </View>
+    );
 }
 const styles = StyleSheet.create({
     expandableView: {

@@ -162,4 +162,4 @@ class ApiHelper{
 
 // export const API_REQUEST=new ApiHelper("http://localhost:9001/v1")
 export const apiBaseHelper=new ApiHelper("http://172.105.56.136:8080")
-// export const apiBaseHelper=new ApiHelper("http://localhost:8080")
+// export const apiBaseHelper = new ApiHelper('http://10.0.2.2:8080');

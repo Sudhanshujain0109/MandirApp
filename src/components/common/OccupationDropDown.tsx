@@ -41,22 +41,26 @@ const OccupationDropDown = ({getOccupation,defalutValue,style}:dropdownprops) =>
     }
 
     return (
-        <CustomDropDown open={open} childrenStle={{}} title={value} style={{width:width-70,marginTop:12,...style}} >
-            {
-                items.map((item,index)=>(
-                    <TouchableOpacity onPress={()=>{
-                        setOpen(false)
-                        setValue(item.label)
-                        getOccupation(item.value)
-                    }}>
-                        <Text style={{ fontSize: 12, color: 'black',padding:10 }}>
-                            {item.label}
-                        </Text>
-                    </TouchableOpacity>
-                ))
-            }
-        </CustomDropDown>
-    )
+      <CustomDropDown
+        open={open}
+        childrenStle={{}}
+        title={value}
+        style={{width: width - 70, marginTop: 12, ...style}}
+        onpress={() => setOpen(prev => !prev)}>
+        {items.map((item, index) => (
+          <TouchableOpacity
+            onPress={() => {
+              setOpen(false);
+              setValue(item.label);
+              getOccupation(item.value);
+            }}>
+            <Text style={{fontSize: 12, color: 'black', padding: 10}}>
+              {item.label}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </CustomDropDown>
+    );
 }
 
 export default OccupationDropDown
