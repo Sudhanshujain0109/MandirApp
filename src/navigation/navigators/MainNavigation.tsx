@@ -13,6 +13,8 @@ import ContentData from '../../Screens/Home/Fregments/Drawer/Content'
 import CommiteeMembers from '../../Screens/Directory/CommitteeMembers'
 import BussinessDirectory from '../../Screens/Directory/BussinessDirectory'
 import Profile from '../../Screens/Home/Fregments/Profile/Profile'
+import FamilyMemberUpdate from '../../NewModule/FamilyMemberUpdate'
+import SearchProfileDetails from '../../Screens/Directory/SearchProfileDetails'
 
 const Stack = createNativeStackNavigator()
 
@@ -20,19 +22,21 @@ const MainNavigation = () => {
   const [user,setUser]=useState(null);
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name='Tabs' component={BottomTab} />
-      <Stack.Screen name='NewsDetail' component={NewsDetail} />
-      <Stack.Screen name='EventDetail' component={EventDetail} />
-      <Stack.Screen name='RelativeAdd' component={RelativeAdd} />
-      <Stack.Screen name='PdfViewer' component={PdfViewer} />
-      <Stack.Screen name='About' component={About} />
-      <Stack.Screen name='Content' component={ContentData} />
-      <Stack.Screen name='CommiteeMembers' component={CommiteeMembers} />
-      <Stack.Screen name='UserProfile' component={Profile} />
-      <Stack.Screen name='BussinessDirectory' component={BussinessDirectory} />
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Tabs" component={BottomTab} />
+      <Stack.Screen name="NewsDetail" component={NewsDetail} />
+      <Stack.Screen name="EventDetail" component={EventDetail} />
+      <Stack.Screen name="RelativeAdd" component={RelativeAdd} />
+      <Stack.Screen name="PdfViewer" component={PdfViewer} />
+      <Stack.Screen name="About" component={About} />
+      <Stack.Screen name="Content" component={ContentData} />
+      <Stack.Screen name="CommiteeMembers" component={CommiteeMembers} />
+      <Stack.Screen name="UserProfile" component={Profile} />
+      <Stack.Screen name="BussinessDirectory" component={BussinessDirectory} />
+      <Stack.Screen name="FamilyMemberUpdate" component={FamilyMemberUpdate} />
+      <Stack.Screen name="SearchProfileDetails" component={SearchProfileDetails} />
     </Stack.Navigator>
-  )
+  );
 }
 
 export default MainNavigation

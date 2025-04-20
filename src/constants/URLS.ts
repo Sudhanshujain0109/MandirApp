@@ -12,14 +12,17 @@ export const URLS={
 
     //profile
     GET_USER_PROFILE:"app/get-profile",
-    GET_USER_FAMILY:"/app/get-family",
-    ADD_MEMBER:"add-member",
+    GET_USER_FAMILY:"app/get-family",
+    ADD_MEMBER: "add-member",
+    UPDATE_MEMBER: 'update-family',
 
-    SEARCH:"user/search",
+    SEARCH:"search",
     SEARCH_ADS:"search_ads",
 
     GET_ABPUT:"get-content",
     GET_CONTENT:"app/get-content",
 
-    GET_OCCUPATION:"app/get-occupation"
+    GET_OCCUPATION: "app/get-occupation",
+    
+    SEARCH_BY_OCCUPATION: 'search-by-occupation'
 }

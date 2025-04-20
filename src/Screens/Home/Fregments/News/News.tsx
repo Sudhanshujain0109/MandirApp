@@ -36,7 +36,6 @@ const News = (props: Props) => {
             setLoader(true);
             const token=await AsyncStorage.getItem(USER_CONFIG.TOKEN_DETAILS);
             const response=await apiBaseHelper.get(URLS.GET_NEWS,token,{page:page});
-            console.log(response)
             if(response.data.status != 200){
                 throw response.data.data
             }

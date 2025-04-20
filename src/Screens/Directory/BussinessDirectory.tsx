@@ -1,78 +1,141 @@
 import { FlatList, StyleSheet, Text, View,Image, Pressable, TouchableOpacity, ImageBackground, ScrollView, Linking } from 'react-native'
-import React, { useRef, useState } from 'react'
-import { SVG_XML } from '../../constants/Svg_xml';
+import React, {useEffect, useRef, useState} from 'react';
+import {SVG_XML} from '../../constants/Svg_xml';
 import SvgIcon from '../../components/common/SvgIcon';
-import { COLORS, height, width } from '../../Utilities/Constants';
+import {COLORS, height, width} from '../../Utilities/Constants';
 import SideBar from '../../components/common/DrawerBar';
 import CustomInputBox from '../__Common__/AppInputBox/CustomInputBox';
 import CustomButton from '../__Common__/Buttons/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { USER_CONFIG } from '../../constants/conig';
-import { apiBaseHelper } from '../../Network/ApiBaseHelper';
-import { URLS } from '../../constants/URLS';
+import {USER_CONFIG} from '../../constants/conig';
+import {apiBaseHelper} from '../../Network/ApiBaseHelper';
+import {URLS} from '../../constants/URLS';
 import UserCard from '../../components/Profile/userCard';
 import SmallUserCard from '../../components/Profile/UserSmallCard';
 import AdsCard from '../../components/common/AdsCard';
+import FamilyMemberCard from '../../NewModule/FamilyMemberCard';
+import CustomDropDown from '../../components/common/CustomDropDown';
 const appLogoAuth = require('../../assets/Images/logo-welcome-screen.png');
 const background = require('../../assets/Images/bg-welcome.jpg');
 
 const BussinessDirectory = () => {
-    const drawerRef=useRef();
-    const [loader,setLoader]=useState(false)
-    const [search,setSearch]=useState("")
-    const [data,setData]=useState([]);
+  const drawerRef = useRef();
+  const [loader, setLoader] = useState(false);
+  const [data, setData] = useState([]);
+  const [occupationList, setOccupationList] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState<string>('Select Occupation');
 
-    const searchData=async()=>{
-        try {
-            if(!search)
-                return
-
-            setLoader(true);
-            const token=await AsyncStorage.getItem(USER_CONFIG.TOKEN_DETAILS);
-            const result=await apiBaseHelper.post(URLS.SEARCH_ADS,{search:search},token);
-            if(result.error)
-                throw result
-            setData(result.data.data);
-            console.log(result.data.data)
-        } catch (error) {
-            console.log(error?.data?.response?.data)
-            setData([])
-        }finally{
-            setLoader(false);
-        }
+  useEffect(() => {
+    getOccupationData();
+  }, []);
+  const getOccupationData = async () => {
+    try {
+      const token = await AsyncStorage.getItem(USER_CONFIG.TOKEN_DETAILS);
+      const occupations = await apiBaseHelper.get(
+        URLS.GET_OCCUPATION,
+        token,
+      );
+      if (occupations.error) throw occupations.data;
+      const formattedOccupations = occupations?.data?.data.map(
+        (occupation: any) => ({
+          label: occupation.name,
+          value: occupation.name,
+        }),
+      );
+      setOccupationList(formattedOccupations);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    return (
-        <ImageBackground source={background} style={styles.container}>
-            <View style={{flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                <TouchableOpacity onPress={()=>drawerRef.current.openDrawer()} style={styles.drawerBox}>
-                    <SvgIcon svgXmlData={SVG_XML.HAMBURER} size={25} />
-                </TouchableOpacity>
-                {/* <SvgIcon svgXmlData={SVG_XML.OPTION_BLACK}  size={25} /> */}
-                <Image source={appLogoAuth} style={{
-                    width: width - 100, height: 100, resizeMode: 'contain',
-                }} />
-            </View>
-            <ScrollView style={styles.loginCard} contentContainerStyle={{ alignItems: 'center',paddingBottom:40}}>
-                <Text style={{color:COLORS.MAIN_APP,fontWeight:"700",textAlign:"center",padding:10}}>Search in Business Directory</Text>
-                <CustomInputBox isEditable={true} value={search} onChange={(e) =>setSearch(e)} hint='Search by Name or Business Type' multiLine={false} width={width - 50} keyboardType='default' marginTop={20} />
-                <CustomButton loader={loader} title='Continue' width={width - 50} onPress={searchData} marginTop={20} marginBottom={10} />
-                {
-                    data.length>0 &&
-                    data.map((item)=>(
-                        <AdsCard
-                            imageUrl={item?.file}
-                            title={item?.title} 
-                            onPress={async()=>await Linking.openURL(`tel:${item?.mobile}`)} 
-                        />
-                    ))
-                }
-                {/* <AdsCard onPress={async()=>await Linking.openURL(`tel:7073787709`)} /> */}
-            </ScrollView>
-            <SideBar ref={drawerRef} />
-        </ImageBackground>
-    )
-}
+  const searchData = async () => {
+    try {
+      if (value === 'Select Occupation') return;
+
+      setLoader(true);
+      const token = await AsyncStorage.getItem(USER_CONFIG.TOKEN_DETAILS);
+      const result = await apiBaseHelper.get(URLS.SEARCH_BY_OCCUPATION, token, {
+        query: value,
+      });
+      if (result.error) throw result;
+      setData(result.data.data);
+      console.log(result.data.data);
+    } catch (error) {
+      console.log(error?.data?.response?.data);
+      setData([]);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  return (
+    <ImageBackground source={background} style={styles.container}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <TouchableOpacity
+          onPress={() => drawerRef.current.openDrawer()}
+          style={styles.drawerBox}>
+          <SvgIcon svgXmlData={SVG_XML.HAMBURER} size={25} />
+        </TouchableOpacity>
+        {/* <SvgIcon svgXmlData={SVG_XML.OPTION_BLACK}  size={25} /> */}
+        <Image
+          source={appLogoAuth}
+          style={{
+            width: width - 100,
+            height: 100,
+            resizeMode: 'contain',
+          }}
+        />
+      </View>
+      <ScrollView
+        style={styles.loginCard}
+        contentContainerStyle={{alignItems: 'center', paddingBottom: 40}}>
+        <Text
+          style={{
+            color: COLORS.MAIN_APP,
+            fontWeight: '700',
+            textAlign: 'center',
+            padding: 10,
+          }}>
+          Search in Business Directory
+        </Text>
+        <CustomDropDown
+          open={open}
+          childrenStle={{}}
+          title={value}
+          style={{width: width - 70, marginTop: 12}}
+          onpress={() => setOpen(prev => !prev)}>
+          {occupationList.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => {
+                setOpen(false);
+                setValue(item.label);
+              }}>
+              <Text style={{fontSize: 12, color: 'black', padding: 10}}>
+                {item.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </CustomDropDown>
+        <CustomButton
+          loader={loader}
+          title="Continue"
+          width={width - 50}
+          onPress={searchData}
+          marginTop={20}
+          marginBottom={10}
+        />
+        {data?.length > 0 && data.map(item => <FamilyMemberCard user={item} />)}
+      </ScrollView>
+      <SideBar ref={drawerRef} />
+    </ImageBackground>
+  );
+};
 
 export default BussinessDirectory
 

@@ -13,6 +13,7 @@ import { URLS } from '../../constants/URLS';
 import UserCard from '../../components/Profile/userCard';
 import SmallUserCard from '../../components/Profile/UserSmallCard';
 import MarriedFropDown from '../../components/common/MarriedDropDown';
+import { useNavigation } from '@react-navigation/native';
 const appLogoAuth = require('../../assets/Images/logo-welcome-screen.png');
 const background = require('../../assets/Images/bg-welcome.jpg');
 
@@ -22,7 +23,8 @@ const Directory = () => {
     const [search,setSearch]=useState("")
     const [marriedOotnot,setmarriedOotnot]=useState("Married")
     const [data,setData]=useState([]);
-
+    const navigation = useNavigation();
+    
     const searchData=async()=>{
         try {
             // if(!search)
@@ -31,11 +33,13 @@ const Directory = () => {
 
             setLoader(true);
             const token=await AsyncStorage.getItem(USER_CONFIG.TOKEN_DETAILS);
-            const result=await apiBaseHelper.post(URLS.SEARCH,{query:search,status:marriedOotnot},token);
+            const result = await apiBaseHelper.get(URLS.SEARCH, token, {
+              query: search,
+              status: marriedOotnot,
+            });
             if(result.error)
                 throw result
             setData(result.data.data);
-            console.log(result.data.data,"datas");
             
         } catch (error) {
             console.log(error)
@@ -44,34 +48,78 @@ const Directory = () => {
             setLoader(false);
         }
     }
-    // data.forEach((t)=>console.log(t))
-    
+
     return (
-        <ImageBackground source={background} style={styles.container}>
-            <View style={{flexDirection:"row",alignItems:"center",justifyContent:"center"}}>
-                <TouchableOpacity onPress={()=>drawerRef.current.openDrawer()} style={styles.drawerBox}>
-                    <SvgIcon svgXmlData={SVG_XML.HAMBURER} size={25} />
-                </TouchableOpacity>
-                {/* <SvgIcon svgXmlData={SVG_XML.OPTION_BLACK}  size={25} /> */}
-                <Image source={appLogoAuth} style={{
-                    width: width - 100, height: 100, resizeMode: 'contain',
-                }} />
-            </View>
-            <ScrollView style={styles.loginCard} contentContainerStyle={{ alignItems: 'center',paddingBottom:40}}>
-                <Text style={{color:COLORS.MAIN_APP,fontWeight:"700",textAlign:"center",padding:10}}>Search in Directory</Text>
-                <CustomInputBox isEditable={true} value={search} onChange={(e) =>setSearch(e)} hint='Search by Name or Business Type' multiLine={false} width={width - 50} keyboardType='default' marginTop={20} />
-                <MarriedFropDown style={{width:width-50}} defalutValue={marriedOotnot} getMarried={(value:any)=>setmarriedOotnot(value)} />
-                <CustomButton loader={loader} title='Continue' width={width - 50} onPress={()=>searchData(search,marriedOotnot)} marginTop={20} marginBottom={10} />
-                {
-                    data.length>0 &&
-                    data.map((item)=>(
-                        <SmallUserCard  user={item} />
-                    ))
+      <ImageBackground source={background} style={styles.container}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <TouchableOpacity
+            onPress={() => drawerRef.current.openDrawer()}
+            style={styles.drawerBox}>
+            <SvgIcon svgXmlData={SVG_XML.HAMBURER} size={25} />
+          </TouchableOpacity>
+          {/* <SvgIcon svgXmlData={SVG_XML.OPTION_BLACK}  size={25} /> */}
+          <Image
+            source={appLogoAuth}
+            style={{
+              width: width - 100,
+              height: 100,
+              resizeMode: 'contain',
+            }}
+          />
+        </View>
+        <ScrollView
+          style={styles.loginCard}
+          contentContainerStyle={{alignItems: 'center', paddingBottom: 40}}>
+          <Text
+            style={{
+              color: COLORS.MAIN_APP,
+              fontWeight: '700',
+              textAlign: 'center',
+              padding: 10,
+            }}>
+            Search in Directory
+          </Text>
+          <CustomInputBox
+            isEditable={true}
+            value={search}
+            onChange={e => setSearch(e)}
+            hint="Search by Name or Business Type"
+            multiLine={false}
+            width={width - 50}
+            keyboardType="default"
+            marginTop={20}
+          />
+          <MarriedFropDown
+            style={{width: width - 50}}
+            defalutValue={marriedOotnot}
+            getMarried={(value: any) => setmarriedOotnot(value)}
+          />
+          <CustomButton
+            loader={loader}
+            title="Continue"
+            width={width - 50}
+            onPress={() => searchData(search, marriedOotnot)}
+            marginTop={20}
+            marginBottom={10}
+          />
+          {data.length > 0 &&
+            data.map(item => (
+              <SmallUserCard
+                user={item}
+                onPress={() =>
+                  navigation.navigate('SearchProfileDetails', {user: item})
                 }
-            </ScrollView>
-            <SideBar ref={drawerRef} />
-        </ImageBackground>
-    )
+              />
+            ))}
+        </ScrollView>
+        <SideBar ref={drawerRef} />
+      </ImageBackground>
+    );
 }
 
 export default Directory
